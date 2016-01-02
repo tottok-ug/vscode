@@ -1,0 +1,12 @@
+{
+	"name": "hatena",
+	"version": "0.1.0",
+	"publisher": "tottok-ug",
+	"engines": { "vscode": "*" },
+	"contributes": {
+		"snippets": [{
+			"language": "hatena",
+			"path": "./snippets/hatena.json"
+		}]
+	}
+}
