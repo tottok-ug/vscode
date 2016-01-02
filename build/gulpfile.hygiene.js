@@ -107,14 +107,14 @@ var hygiene = exports.hygiene = function (some) {
 		this.emit('data', file);
 	});
 
-	var copyrights = es.through(function (file) {
-		if (file.contents.toString('utf8').indexOf(copyrightHeader) !== 0) {
-			console.error(file.relative + ': Missing or bad copyright statement');
-			errorCount++;
-		}
+	// var copyrights = es.through(function (file) {
+	//	if (file.contents.toString('utf8').indexOf(copyrightHeader) !== 0) {
+	//		console.error(file.relative + ': Missing or bad copyright statement');
+	//		errorCount++;
+	//	}
 
-		this.emit('data', file);
-	});
+    //		this.emit('data', file);
+	// });
 
 	return gulp.src(some || all, { base: '.' })
 		.pipe(filter(function (f) { return !f.stat.isDirectory(); }))
