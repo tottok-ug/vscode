@@ -12,11 +12,11 @@ import Types = require('vs/editor/common/modes/monarch/monarchTypes');
 import Compile = require('vs/editor/common/modes/monarch/monarchCompile');
 import EditorCommon = require('vs/editor/common/editorCommon');
 import Modes = require('vs/editor/common/modes');
-import MarkdownWorker = require('vs/languages/markdown/common/markdownWorker');
+import HatenaWorker = require('vs/languages/hatena/common/hatenaWorker');
 import {OneWorkerAttr} from 'vs/platform/thread/common/threadService';
 import {AsyncDescriptor2, createAsyncDescriptor2} from 'vs/platform/instantiation/common/descriptors';
 import {htmlTokenTypes} from 'vs/languages/html/common/html';
-import markdownTokenTypes = require('vs/languages/markdown/common/markdownTokenTypes');
+import hatenaTokenTypes = require('vs/languages/hatena/common/hatenaTokenTypes');
 import {IModeService} from 'vs/editor/common/services/modeService';
 import {IInstantiationService} from 'vs/platform/instantiation/common/instantiation';
 import {IThreadService} from 'vs/platform/thread/common/thread';
@@ -25,8 +25,8 @@ import {IWorkspaceContextService} from 'vs/platform/workspace/common/workspace';
 
 export const language =
 	<Types.ILanguage>{
-		displayName: 'Markdown',
-		name: 'md',
+		displayName: 'Hatena',
+		name: 'htn',
 		defaultToken: '',
 
 		suggestSupport: {
@@ -53,50 +53,50 @@ export const language =
 			root: [
 
 				// headers (with #)
-				[/^(\s{0,3})(#+)((?:[^\\#]|@escapes)+)((?:#+)?)/, ['white', markdownTokenTypes.TOKEN_HEADER_LEAD, markdownTokenTypes.TOKEN_HEADER, markdownTokenTypes.TOKEN_HEADER]],
+				[/^(\s{0,3})(#+)((?:[^\\#]|@escapes)+)((?:#+)?)/, ['white', hatenaTokenTypes.TOKEN_HEADER_LEAD, hatenaTokenTypes.TOKEN_HEADER, hatenaTokenTypes.TOKEN_HEADER]],
 
 				// headers (with =)
-				[/^\s*(=+|\-+)\s*$/, markdownTokenTypes.TOKEN_EXT_HEADER],
+				[/^\s*(=+|\-+)\s*$/, hatenaTokenTypes.TOKEN_EXT_HEADER],
 
 				// headers (with ***)
-				[/^\s*((\*[ ]?)+)\s*$/, markdownTokenTypes.TOKEN_SEPARATOR],
+				[/^\s*((\*[ ]?)+)\s*$/, hatenaTokenTypes.TOKEN_SEPARATOR],
 
 				// quote
-				[/^\s*>+/, markdownTokenTypes.TOKEN_QUOTE],
+				[/^\s*>+/, hatenaTokenTypes.TOKEN_QUOTE],
 
 				// list (starting with * or number)
-				[/^\s*([\*\-+:]|\d+\.)\s/, markdownTokenTypes.TOKEN_LIST],
+				[/^\s*([\*\-+:]|\d+\.)\s/, hatenaTokenTypes.TOKEN_LIST],
 
 				// code block (4 spaces indent)
-				[/^(\t|[ ]{4})[^ ].*$/, markdownTokenTypes.TOKEN_BLOCK],
+				[/^(\t|[ ]{4})[^ ].*$/, hatenaTokenTypes.TOKEN_BLOCK],
 
 				// code block (3 tilde)
-				[/^\s*~{3}\s*((?:\w|[\/\-])+)?\s*$/, { token: markdownTokenTypes.TOKEN_BLOCK, next: '@codeblock' }],
+				[/^\s*~{3}\s*((?:\w|[\/\-])+)?\s*$/, { token: hatenaTokenTypes.TOKEN_BLOCK, next: '@codeblock' }],
 
 				// github style code blocks (with backticks and language)
-				[/^\s*```\s*((?:\w|[\/\-])+)\s*$/, { token: markdownTokenTypes.TOKEN_BLOCK, next: '@codeblockgh', nextEmbedded: '$1' }],
+				[/^\s*```\s*((?:\w|[\/\-])+)\s*$/, { token: hatenaTokenTypes.TOKEN_BLOCK, next: '@codeblockgh', nextEmbedded: '$1' }],
 
 				// github style code blocks (with backticks but no language)
-				[/^\s*`{3}\s*$/, { token: markdownTokenTypes.TOKEN_BLOCK, next: '@codeblock' }],
+				[/^\s*`{3}\s*$/, { token: hatenaTokenTypes.TOKEN_BLOCK, next: '@codeblock' }],
 
 				// markup within lines
 				{ include: '@linecontent' },
 			],
 
 			codeblock: [
-				[/^\s*~{3}\s*$/, { token: markdownTokenTypes.TOKEN_BLOCK, next: '@pop' }],
-				[/^\s*`{3}\s*$/, { token: markdownTokenTypes.TOKEN_BLOCK, next: '@pop' }],
-				[/.*$/, markdownTokenTypes.TOKEN_BLOCK_CODE],
+				[/^\s*~{3}\s*$/, { token: hatenaTokenTypes.TOKEN_BLOCK, next: '@pop' }],
+				[/^\s*`{3}\s*$/, { token: hatenaTokenTypes.TOKEN_BLOCK, next: '@pop' }],
+				[/.*$/, hatenaTokenTypes.TOKEN_BLOCK_CODE],
 			],
 
 			// github style code blocks
 			codeblockgh: [
 				[/```\s*$/, { token: '@rematch', switchTo: '@codeblockghend', nextEmbedded: '@pop' }],
-				[/[^`]*$/, markdownTokenTypes.TOKEN_BLOCK_CODE],
+				[/[^`]*$/, hatenaTokenTypes.TOKEN_BLOCK_CODE],
 			],
 
 			codeblockghend: [
-				[/\s*```/, { token: markdownTokenTypes.TOKEN_BLOCK_CODE, next: '@pop' }],
+				[/\s*```/, { token: hatenaTokenTypes.TOKEN_BLOCK_CODE, next: '@pop' }],
 				[/./, '@rematch', '@pop'],
 			],
 
@@ -204,7 +204,7 @@ export const language =
 		}
 	};
 
-export class MarkdownMode extends Monarch.MonarchMode<MarkdownWorker.MarkdownWorker> implements Modes.IEmitOutputSupport {
+export class HatenaMode extends Monarch.MonarchMode<HatenaWorker.HatenaWorker> implements Modes.IEmitOutputSupport {
 
 	public emitOutputSupport: Modes.IEmitOutputSupport;
 
@@ -225,12 +225,12 @@ export class MarkdownMode extends Monarch.MonarchMode<MarkdownWorker.MarkdownWor
 		return { blockCommentStartToken: '<!--', blockCommentEndToken: '-->' };
 	}
 
-	static $getEmitOutput = OneWorkerAttr(MarkdownMode, MarkdownMode.prototype.getEmitOutput);
+	static $getEmitOutput = OneWorkerAttr(HatenaMode, HatenaMode.prototype.getEmitOutput);
 	public getEmitOutput(resource: URI, absoluteWorkerResourcesPath?: string): WinJS.TPromise<Modes.IEmitOutput> { // TODO@Ben technical debt: worker cannot resolve paths absolute
 		return this._worker((w) => w.getEmitOutput(resource, absoluteWorkerResourcesPath));
 	}
 
-	protected _getWorkerDescriptor(): AsyncDescriptor2<Modes.IMode, Modes.IWorkerParticipant[], MarkdownWorker.MarkdownWorker> {
-		return createAsyncDescriptor2('vs/languages/markdown/common/markdownWorker', 'MarkdownWorker');
+	protected _getWorkerDescriptor(): AsyncDescriptor2<Modes.IMode, Modes.IWorkerParticipant[], HatenaWorker.HatenaWorker> {
+		return createAsyncDescriptor2('vs/languages/hatena/common/hatenaWorker', 'HatenaWorker');
 	}
 }

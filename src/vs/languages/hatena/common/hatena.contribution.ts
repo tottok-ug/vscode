@@ -10,7 +10,7 @@ import ConfigurationRegistry = require('vs/platform/configuration/common/configu
 import Platform = require('vs/platform/platform');
 
 ModesExtensions.registerMode({
-	id: 'markdown',
+	id: 'hatena',
 	extensions: ['.hatena', '.htn', '.md'],
 	aliases: ['Hatena', 'hatena'],
 	mimetypes: ['text/x-web-hatena'],
@@ -26,9 +26,9 @@ configurationRegistry.registerConfiguration({
 	'type': 'object',
 	'title': nls.localize('hatenaConfigurationTitle', "Hatena preview configuration"),
 	'properties': {
-		'markdown.styles': {
+		'hatena.styles': {
 			'type': 'array',
-			'description': nls.localize('styles', "A list of URLs or local paths to CSS style sheets to use from the markdown preview."),
+			'description': nls.localize('styles', "A list of URLs or local paths to CSS style sheets to use from the hatena preview."),
 			'items': {
 				'type': 'string'
 			}

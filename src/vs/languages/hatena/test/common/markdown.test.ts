@@ -4,19 +4,19 @@
  *--------------------------------------------------------------------------------------------*/
 'use strict';
 
-import 'vs/languages/markdown/common/markdown.contribution';
+import 'vs/languages/hatena/common/hatena.contribution';
 import modesUtil = require('vs/editor/test/common/modesUtil');
-import markdownMode = require('vs/languages/markdown/common/markdown');
+import markdownMode = require('vs/languages/hatena/common/hatena');
 import EditorCommon = require('vs/editor/common/editorCommon');
 import Modes = require('vs/editor/common/modes');
 import {htmlTokenTypes} from 'vs/languages/html/common/html';
 import {cssTokenTypes} from 'vs/languages/css/common/css';
 
-suite('Markdown - tokenization', () => {
+suite('Hatena - tokenization', () => {
 
 	var tokenizationSupport: Modes.ITokenizationSupport;
 	setup((done) => {
-		modesUtil.load('markdown', ['html']).then(mode => {
+		modesUtil.load('hatena', ['html']).then(mode => {
 			tokenizationSupport = mode.tokenizationSupport;
 			done();
 		});
